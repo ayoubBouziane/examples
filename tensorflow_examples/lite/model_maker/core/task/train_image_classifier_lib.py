@@ -146,19 +146,23 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
 
   ##################################################################################
   # callBacks tools.
+  
+  print("Checkpoint folder created !")
+  
   today = date.today().strftime("%d-%m-%Y")
-  base_dir = "/content/"
-  if not os.path.exists(base_dir+'Checkpoint'):
-    os.makedirs(base_dir+'Checkpoint')
-    print("Checkpoint folder created !")
-  if not os.path.exists(base_dir+'Checkpoint/tmp/backup'):
-    os.makedirs(base_dir+'Checkpoint/tmp/backup')
-    print("backup folder created !")
+  checkpoint_dir = os.path.join(hparams.model_dir, 'checkpoint')
+  backup_dir = os.path.join(hparams.model_dir, 'tmp/backup')
+  if not os.path.exists(checkpoint_dir):
+    os.makedirs(checkpoint_dir)
+    print("Checkpoint folder created at : ", checkpoint_dir)
+  if not os.path.exists(backup_dir):
+    os.makedirs(backup_dir)
+    print("backup folder created at : ", backup_dir)
   # callBacks.
   summary_dir = os.path.join(hparams.model_dir, "summaries")
   summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
-  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=base_dir+'Checkpoint/Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5', monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
-  backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=base_dir+'Checkpoint/tmp/backup')
+  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(checkpoint_dir, 'Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5'), monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
+  backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=backup_dir)
   earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
 
   ##################################################################################
