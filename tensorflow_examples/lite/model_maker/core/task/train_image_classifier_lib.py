@@ -147,8 +147,6 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
   ##################################################################################
   # callBacks tools.
   
-  print("Checkpoint folder created !")
-  
   today = date.today().strftime("%d-%m-%Y")
   checkpoint_dir = os.path.join(hparams.model_dir, 'checkpoint')
   backup_dir = os.path.join(hparams.model_dir, 'tmp/backup')
