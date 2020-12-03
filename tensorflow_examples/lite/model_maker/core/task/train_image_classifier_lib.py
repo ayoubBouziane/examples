@@ -144,8 +144,8 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
   # Save checkpoint every 20 epochs.
   checkpoint_path = os.path.join(hparams.model_dir, "checkpoint")
 
-##################################################################################
-    # callBacks tools.
+  ##################################################################################
+  # callBacks tools.
   today = date.today().strftime("%d-%m-%Y")
   base_dir = "/content/"
   if not os.path.exists(base_dir+'Checkpoint'):
