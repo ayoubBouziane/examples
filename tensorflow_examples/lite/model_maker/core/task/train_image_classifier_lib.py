@@ -20,6 +20,7 @@ from __future__ import print_function
 import collections
 import os
 import tempfile
+from datetime import date
 
 import tensorflow.compat.v2 as tf
 from tensorflow_examples.lite.model_maker.core.optimization import warmup
@@ -142,8 +143,25 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
   summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
   # Save checkpoint every 20 epochs.
   checkpoint_path = os.path.join(hparams.model_dir, "checkpoint")
-  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-      checkpoint_path, save_weights_only=True, period=20)
+
+##################################################################################
+    # callBacks tools.
+  today = date.today().strftime("%d-%m-%Y")
+  base_dir = "/content/"
+  if not os.path.exists(base_dir+'Checkpoint'):
+    os.makedirs(base_dir+'Checkpoint')
+    print("Checkpoint folder created !")
+  if not os.path.exists(base_dir+'Checkpoint/tmp/backup'):
+    os.makedirs(base_dir+'Checkpoint/tmp/backup')
+    print("backup folder created !")
+# callBacks.
+summary_dir = os.path.join(hparams.model_dir, "summaries")
+summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
+checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=base_dir+'Checkpoint/Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5', monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
+backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=base_dir+'Checkpoint/tmp/backup')
+earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
+
+##################################################################################
 
   # Trains the models.
   return model.fit(
@@ -152,4 +170,5 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
       steps_per_epoch=steps_per_epoch,
       validation_data=validation_data,
       validation_steps=validation_steps,
-      callbacks=[summary_callback, checkpoint_callback])
+      callbacks=[summary_callback, checkpoint_callback, earlystopping, backupAndRestore])
+
