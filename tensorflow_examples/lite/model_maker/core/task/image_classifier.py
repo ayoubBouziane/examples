@@ -236,8 +236,7 @@ class ImageClassifier(classification_model.ClassificationModel):
       The tf.keras.callbacks.History object returned by tf.keras.Model.fit*().
     """
     self.create_model()
-    hparams = self.
-    (hparams)
+    hparams = self._get_hparams_or_default(hparams)
 
     if len(train_data) < hparams.batch_size:
       raise ValueError('The size of the train_data (%d) couldn\'t be smaller '
