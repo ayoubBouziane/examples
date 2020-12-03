@@ -159,7 +159,7 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
   # callBacks.
   summary_dir = os.path.join(hparams.model_dir, "summaries")
   summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
-  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(checkpoint_dir, 'Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5'), monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
+  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=os.path.join(checkpoint_dir, 'model_weights@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5'), monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = True)
   backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=backup_dir)
   earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
 
