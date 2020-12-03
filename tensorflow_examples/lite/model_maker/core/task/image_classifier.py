@@ -104,7 +104,7 @@ def create(train_data,
         dropout_rate=dropout_rate,
         learning_rate=learning_rate,
         momentum=momentum,
-        model_dir=model_dir)
+        hub_model_dir=model_dir)
   else:
     hparams = train_image_classifier_lib.HParams.get_hparams(
         batch_size=batch_size,
@@ -236,7 +236,8 @@ class ImageClassifier(classification_model.ClassificationModel):
       The tf.keras.callbacks.History object returned by tf.keras.Model.fit*().
     """
     self.create_model()
-    hparams = self._get_hparams_or_default(hparams)
+    hparams = self.
+    (hparams)
 
     if len(train_data) < hparams.batch_size:
       raise ValueError('The size of the train_data (%d) couldn\'t be smaller '
