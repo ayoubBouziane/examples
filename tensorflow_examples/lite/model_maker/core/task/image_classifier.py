@@ -214,7 +214,7 @@ class ImageClassifier(classification_model.ClassificationModel):
         self.model_spec.uri, trainable=hparams.do_fine_tuning)
 
     self.model = hub_lib.build_model(module_layer, hparams, self.model_spec.input_image_shape, self.num_classes)
-    if self.model_weights is noy None:
+    if self.model_weights is not None:
       self.model.load_weights(model_weights)
     
     if with_loss_and_metrics:
