@@ -103,7 +103,8 @@ def create(train_data,
         do_fine_tuning=train_whole_model,
         dropout_rate=dropout_rate,
         learning_rate=learning_rate,
-        momentum=momentum)
+        momentum=momentum,
+        model_dir=model_dir)
   else:
     hparams = train_image_classifier_lib.HParams.get_hparams(
         batch_size=batch_size,
