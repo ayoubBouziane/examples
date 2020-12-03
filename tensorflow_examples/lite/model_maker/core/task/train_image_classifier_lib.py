@@ -154,14 +154,14 @@ def train_model(model, hparams, train_data_and_size, validation_data_and_size):
   if not os.path.exists(base_dir+'Checkpoint/tmp/backup'):
     os.makedirs(base_dir+'Checkpoint/tmp/backup')
     print("backup folder created !")
-# callBacks.
-summary_dir = os.path.join(hparams.model_dir, "summaries")
-summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
-checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=base_dir+'Checkpoint/Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5', monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
-backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=base_dir+'Checkpoint/tmp/backup')
-earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
+  # callBacks.
+  summary_dir = os.path.join(hparams.model_dir, "summaries")
+  summary_callback = tf.keras.callbacks.TensorBoard(summary_dir)
+  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=base_dir+'Checkpoint/Model@'+today+'@epoch-{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}_accuracy-{accuracy:.4f}_val_accuracy-{val_accuracy:.4f}.hdf5', monitor='val_loss', verbose = 1, save_best_only=False, save_weights_only = False)
+  backupAndRestore = tf.keras.callbacks.experimental.BackupAndRestore(backup_dir=base_dir+'Checkpoint/tmp/backup')
+  earlystopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=15, min_delta=0, mode='auto', restore_best_weights=True)
 
-##################################################################################
+  ##################################################################################
 
   # Trains the models.
   return model.fit(
