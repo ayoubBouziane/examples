@@ -57,7 +57,7 @@ def create(train_data,
            warmup_steps=None,
            model_dir=None,
            do_train=True,
-           initial_model=None
+           model_weights=None
            ):
   """Loads data and retrains the model based on data for image classification.
 
@@ -121,7 +121,7 @@ def create(train_data,
       shuffle=shuffle,
       hparams=hparams,
       use_augmentation=use_augmentation,
-      initial_model=initial_model)
+      model_weights=model_weights)
 
   if do_train:
     tf.compat.v1.logging.info('Retraining the models...')
@@ -176,7 +176,7 @@ class ImageClassifier(classification_model.ClassificationModel):
                shuffle=True,
                hparams=hub_lib.get_default_hparams(),
                use_augmentation=False,
-               initial_model=None):
+               model_weights=None):
     """Init function for ImageClassifier class.
 
     Args:
@@ -201,7 +201,7 @@ class ImageClassifier(classification_model.ClassificationModel):
         self.model_spec.stddev_rgb,
         use_augmentation=use_augmentation)
     self.history = None  # Training history that returns from `keras_model.fit`.
-    self.initial_model = initial_model
+    self.model_weights = model_weights
   def _get_tflite_input_tensors(self, input_tensors):
     """Gets the input tensors for the TFLite model."""
     return input_tensors
@@ -212,12 +212,11 @@ class ImageClassifier(classification_model.ClassificationModel):
 
     module_layer = hub_loader.HubKerasLayerV1V2(
         self.model_spec.uri, trainable=hparams.do_fine_tuning)
-    if self.initial_model is None:
-        self.model = hub_lib.build_model(module_layer, hparams,
-                                         self.model_spec.input_image_shape,
-                                         self.num_classes)
-    else:
-        self.model = tf.keras.models.load_model(self.initial_model)
+
+    self.model = hub_lib.build_model(module_layer, hparams, self.model_spec.input_image_shape, self.num_classes)
+    if self.model_weights is noy None:
+      self.model.load_weights(model_weights)
+    
     if with_loss_and_metrics:
       # Adds loss and metrics in the keras model.
       self.model.compile(
